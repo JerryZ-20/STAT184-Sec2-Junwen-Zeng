@@ -1,0 +1,23 @@
+library(dplyr)
+library(ggplot2)
+
+diamondSummary <- diamonds %>%
+    group_by(cut) %>%
+    dplyr::select(cut, x) %>%
+    summarize(
+        across(
+            .cols = where(is.numeric),
+            .fns = list(
+                min = ~min(.x, na.rm = TRUE),
+                firstQUIN = ~sum(.x < quantile(.x, 0.20, na.rm = TRUE), na.rm = TRUE),
+                secondQUIN = ~sum(.x >= quantile(.x, 0.20, na.rm = TRUE) & .x < quantile(.x, 0.40, na.rm = TRUE), na.rm = TRUE),
+                median = ~median(.x, na.rm = TRUE),
+                thirdQUIN = ~sum(.x >= quantile(.x, 0.40, na.rm = TRUE) & .x < quantile(.x, 0.60, na.rm = TRUE), na.rm = TRUE),
+                fourthQUIN = ~sum(.x >= quantile(.x, 0.60, na.rm = TRUE) & .x < quantile(.x, 0.80, na.rm = TRUE), na.rm = TRUE),
+                max = ~max(.x, na.rm = TRUE),
+                mean = ~mean(.x, na.rm = TRUE),
+                sd = ~sd(.x, na.rm = TRUE)
+            )
+        ),
+        count = n()
+    )
