@@ -1,0 +1,34 @@
+library(ggplot2)
+library(dplyr)
+
+my_names <- BabyNames %>%
+  filter(name %in% c("Michael", "James", "Mary", "Jennifer"))
+
+ggplot(my_names, aes(x = year, y = count, color = name)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Popularity of Names",
+    x = "Year",
+    y = "Count of Babies",
+    color = "Name"
+  ) +
+  theme_minimal()
+
+
+library(ggplot2)
+library(dplyr)
+
+my_names <- BabyNames %>%
+  filter(name %in% c("Michael", "James", "Mary", "Jennifer")) %>%
+  group_by(name, year) %>%
+  summarize(total_count = sum(count), .groups = 'drop')
+
+ggplot(my_names, aes(x = year, y = total_count, color = name)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Popularity of Selected Names Over Time",
+    x = "Year",
+    y = "Total Number of Babies with Name",
+    color = "Name"
+  ) +
+  theme_minimal()
